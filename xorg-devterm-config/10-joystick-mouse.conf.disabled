@@ -1,0 +1,27 @@
+# Copy this file, removing the '.disabled' from the end, to make the
+# joystick function as a mouse device.
+#
+# Recognizing the input device is occassionally fiddly.  You may have to tweak
+# this in order to make it work.  (Sorry!)
+Section "InputClass"
+	Identifier "CPiJoystick"
+	Driver "joystick"
+	MatchIsJoystick "on"
+#	MatchDevicePath "/dev/input/by-id/usb-*-event-joystick"
+	MatchDevicePath "/dev/input/event*"
+#	MatchProduct "ClockworkPI DevTerm (keys)"
+	Option "StartMouseEnabled" "True"
+	Option "StartKeysEnabled" "True"
+	Option "MapAxis1" "mode=relative axis=+0.6x"
+	Option "MapAxis2" "mode=relative axis=+0.6y"
+	Option "MapButton1" "button=4"
+	Option "MapButton2" "button=5"
+	Option "MapButton3" "key=12"
+	Option "MapButton4" "key=13"
+	Option "MapButton5" "key=14"
+	Option "MapButton6" "key=15"
+	Option "MapButton7" "key=16"
+	Option "MapButton8" "key=17"
+
+	#Option  "Floating"      "true"
+EndSection

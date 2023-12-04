@@ -1,0 +1,15 @@
+# Description: Proper X setup for DevTerm
+# Maintainer: Pete Elmore, pete at debu dot gs
+# Depends on: 
+
+name=xorg-devterm-config
+version=1.0
+release=1
+
+source=(10-monitor.conf 01-armbian-defaults.conf 10-joystick-mouse.conf.disabled)
+
+build() {
+	mkdir -p $PKG/etc/X11/xorg.conf.d/
+	cp 10-monitor.conf 01-armbian-defaults.conf 10-joystick-mouse.conf.disabled \
+		$PKG/etc/X11/xorg.conf.d/
+}
