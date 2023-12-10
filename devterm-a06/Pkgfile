@@ -61,7 +61,7 @@ build() {
 	# Finally, one that works, although it doesn't treat $PREFIX as expected
 	# ...It uses "root.root" instead of "root:root".
 	sed -i 's/root\.root/root:root/' Makefile
-	make PREFIX="" DESTDIR=$PKG install
+	make PREFIX="" DESTDIR=$PKG/usr install
 
 	cd ../wiringPiD
 	make BOARD=clockworkpi-a06-rk3399 CFLAGS="$CFLAGS -DPIC -fPIC -I$PKG/usr/include" LDFLAGS="$LDFLAGS -L$PKG/usr/lib -L."
