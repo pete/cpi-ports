@@ -81,7 +81,7 @@ build() {
 	# Keyboard firmware installers
 	install -D -m 755 \
 		Code/devterm_keyboard/bin/DevTerm_keyboard_firmware_*_utils.sh \
-		$PKG/usr/bin/DevTerm_keyboard_firmware_v0.3_utils.sh \
+		$PKG/usr/bin
 
 	# Fan daemon
 	install -D -m 755 Code/devterm_fan_daemon_cpi_a06/temp_fan_daemon_a06.py \
