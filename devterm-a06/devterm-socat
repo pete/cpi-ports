@@ -8,7 +8,7 @@ D="/usr/bin/start-stop-daemon --pidfile /var/run/devterm-printer-socat.pid"
 
 case $1 in
 	start)
-		$D -b -m -S /usr/bin/socat -- -d -d pty,link=/tmp/DEVTERM_PRINTER_OUT,raw,echo=0 pty,link=/tmp/DEVTERM_PRINTER_IN,raw,echo=0
+		$D -b -m -S --exec /usr/bin/socat -- -d -d pty,link=/tmp/DEVTERM_PRINTER_OUT,raw,echo=0 pty,link=/tmp/DEVTERM_PRINTER_IN,raw,echo=0
 		/usr/bin/devterm_socat_perms &
 		;;
 	stop)

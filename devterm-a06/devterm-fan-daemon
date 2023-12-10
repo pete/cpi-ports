@@ -5,7 +5,7 @@ D="/sbin/start-stop-daemon --pidfile /var/run/devterm-fan-daemon.pid"
 
 case $1 in
 	start)
-		$D -b -m -S /usr/bin/python3 -- /usr/bin/temp_fan_daemon_a06.py
+		$D -b -m -S --exec /usr/bin/temp_fan_daemon_a06.py
 		;;
 	stop)
 		$D -K --remove-pidfile

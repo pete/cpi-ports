@@ -5,7 +5,7 @@ D="/sbin/start-stop-daemon --pidfile /var/run/devterm-audio-patch.pid"
 
 case $1 in
 	start)
-		$D -b -m -S /usr/bin/python3 -- /usr/bin/audio_3.5_patch.py
+		$D -b -m -S --exec /usr/bin/audio_3.5_patch.py
 		;;
 	stop)
 		$D -K --remove-pidfile
