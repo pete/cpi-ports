@@ -1,0 +1,51 @@
+#!/bin/sh
+#Description=devterm printer daemon
+
+D="/usr/bin/daemon -n devterm-printer"
+TTF=/usr/share/fonts/TTF/DejaVuSansMono.ttf
+LOG=/tmp/devterm_printer.log
+. /etc/devterm-printer
+
+if ! test -f $TTF; then
+	echo $0: TTF must be set to an appropriate font. >&2
+	echo $0: See /etc/devterm-printer >&2
+	TTF="$(find /usr/share/fonts -type f -iname '*.ttf')"
+	echo $0: Using "$TTF" >&2
+fi
+
+case $1 in
+	start)
+		TTF=$TTF $D -O $LOG -b -m -S /usr/bin/devterm_thermal_printer.elf
+		;;
+	stop)
+		$D -K --remove-pidfile
+		;;
+	restart)
+		$0 stop
+		sleep 1
+		$0 start
+		;;
+	*)
+		echo "usage: $0 (start|stop|restart)" >&2
+	;;
+esac
+#!/bin/sh
+#Description=devterm printer main process
+
+D="/usr/bin/daemon -n devterm-printer -e 'TTF=$TTF' -O $LOG -E $LOG"
+
+case $1 in
+	start)
+		$D /usr/local/bin/devterm_thermal_printer.elf
+		;;
+	stop)
+		$D --stop
+		;;
+	restart)
+		$D --restart
+		;;
+	*)
+		echo "usage: $0 (start|stop|restart)" >&2
+	;;
+esac
+

@@ -1,0 +1,21 @@
+#!/bin/sh
+#Description=devterm patch for audio speaker
+
+D="/sbin/start-stop-daemon --pidfile /var/run/devterm-audio-patch.pid"
+
+case $1 in
+	start)
+		$D -b -m -S /usr/bin/python3 -- /usr/bin/audio_3.5_patch.py
+		;;
+	stop)
+		$D -K --remove-pidfile
+		;;
+	restart)
+		$0 stop
+		sleep 1
+		$0 start
+		;;
+	*)
+		echo "usage: $0 (start|stop|restart)" >&2
+	;;
+esac

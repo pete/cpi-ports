@@ -1,0 +1,104 @@
+# Description:  DevTerm-specific code, A-06
+# URL:  https://clockworkpi.com/devterm
+# Maintainer:  Pete, pete at debu dot gs
+# Depends on: python3 socat start-stop-daemon
+
+name=devterm-a06
+version=2023.12.08
+release=1
+git_commit=
+source=( audio_3.5_patch.py devterm-fan-daemon devterm-audio-patch devterm-printer devterm-socat devterm_socat_perms )
+
+# Be very careful with this:
+#   * Almost none of this has been tested yet!
+#   * A lot of the Makefiles make no use of $DESTDIR or $PREFIX
+#   * The ones that use $DESTDIR/$PREFIX sometimes do so creatively.
+#   * Everything below is order-dependent.
+#   * Progam names have been kept as-is so as to minimize conflict with official
+#     images.
+#   * audio_3.5_patch.py is trivial, but I don't know where it came from.  I
+#     have just copied it here from the official build.
+#   * I don't know of a CRUX package for Noto Sans; DejaVu has been substituted.
+#     This only matters for the printer, and only if you don't edit
+#     /etc/devterm-printer
+
+# Future development notes:
+#   * Some of the Makefiles could use cleanup and patches sent upstream.
+#   * Maybe tweak the fan daemon so that it reads a config file instead of
+#     expecting that you'll edit it, because I don't want changes overwritten.
+#     (See below, though.)
+#   * gearbox is fine as-is, but some of the long-running daemons I have an
+#     urge to rewrite in C or Go or something that isn't interpreted.  I have
+#     never seen them require much CPU, though, so this is very low-priority.
+build() {
+	test -d $PKGMK_SRC_DIR/DevTerm || git clone https://github.com/clockworkpi/DevTerm $PKGMK_SRC_DIR/DevTerm
+	sh -c "cd $PKGMK_SRC_DIR/DevTerm && git archive --format tar --prefix DevTerm/ HEAD" | tar xv
+
+	cd DevTerm
+	here=`pwd`
+	install -D -d -m 755 $PKG/etc/rc.d
+	install -D -d -m 755 $PKG/usr/bin
+	install -D -d -m 755 $PKG/usr/lib
+	install -D -d -m 755 $PKG/usr/include
+
+	# wiringPi is somewhat unfriendly for conventional Linux systems and it
+	# has also been tweaked some upstream, so this is going to be a bit of a
+	# mess; pardon our dust.
+	cd Code/devterm_wiringpi_cpi/wiringPi
+	make BOARD=clockworkpi-a06-rk3399
+	install -D -m 0644 ads1115.h bmp180.h drcNet.h drcSerial.h ds18b20.h htu21d.h max31855.h max5322.h mcp23008.h mcp23016.h mcp23016reg.h mcp23017.h mcp23s08.h mcp23s17.h mcp23x08.h mcp23x0817.h mcp3002.h mcp3004.h mcp3422.h mcp4802.h pcf8574.h pcf8591.h pseudoPins.h rht03.h sn3218.h softPwm.h softServo.h softTone.h sr595.h wiringCPi.h wiringPi.h wiringPiI2C.h wiringPiSPI.h wiringSerial.h wiringShift.h wpiExtensions.h $PKG/usr/include
+	install -D -m 0755 libwiringPi.so.2.50 $PKG/usr/lib/libwiringPi.so.2.50
+	ln -sf libwiringPi.so.2.50 $PKG/usr/lib/libwiringPi.so
+
+	cd ../devLib
+	make BOARD=clockworkpi-a06-rk3399 CFLAGS="$CFLAGS -DPIC -fPIC -I$PKG/usr/include" LDFLAGS="$LDFLAGS -L$PKG/usr/lib -L."
+	install -D -m 0644 ds1302.h gertboard.h  lcd128x64.h  lcd.h  maxdetect.h piFace.h  piGlow.h  piNes.h scrollPhat.h $PKG/usr/include/
+	install -D -m 0755 libwiringPiDev.so.2.50 $PKG/usr/lib/
+	ln -sf libwiringPiDev.so.2.50 $PKG/usr/lib/libwiringPiDev.so
+
+	cd ../gpio
+	make BOARD=clockworkpi-a06-rk3399 CFLAGS="$CFLAGS -DPIC -fPIC -I$PKG/usr/include" LDFLAGS="$LDFLAGS -L$PKG/usr/lib -L."
+	# Finally, one that works, although it doesn't treat $PREFIX as expected
+	make PREFIX="" DESTDIR=$PKG install
+
+	cd ../wiringPiD
+	make BOARD=clockworkpi-a06-rk3399 CFLAGS="$CFLAGS -DPIC -fPIC -I$PKG/usr/include" LDFLAGS="$LDFLAGS -L$PKG/usr/lib -L."
+	make PREFIX=/usr DESTDIR=$PKG install
+
+	# cups support for thermal printer.  Makefile doesn't support DESTDIR. :P
+	cd $here/devterm_thermal_printer_cups
+	make
+	install -D -m 755 rastertocpi $PKG/usr/lib/cups/filter/rastertocpi
+	install -D -m 644 cpi58.ppd $PKG/usr/share/cups/model/clockworkpi/cpi58.ppd
+
+	cd $here/thermal_printer
+	make CFLAGS="$CFLAGS -I$PKG/usr/include -L$PKG/usr/lib" # sic
+	install -D -m 755 devterm_thermal_printer.elf $PKG/usr/bin/devterm_thermal_printer.elf
+
+	# The Python/bash stuff is 
+	cd $here
+	# Keyboard firmware installers
+	install -D -m 755 \
+		Code/devterm_keyboard/bin/DevTerm_keyboard_firmware_*_utils.sh \
+		$PKG/usr/bin/DevTerm_keyboard_firmware_v0.3_utils.sh \
+
+	# Fan daemon
+	install -D -m 755 Code/devterm_fan_daemon_cpi_a06/temp_fan_daemon_a06.py \
+		$PKG/usr/bin/temp_fan_daemon_a06.py
+
+	# Gearbox!
+	install -D -m 755 Code/A06/devterm-a06-gearbox \
+		$PKG/usr/bin/devterm-a06-gearbox
+
+	# Finally, the init scripts and whatnot:
+	cd $SRC
+	install -D -m 755 \
+		devterm-audio-patch devterm-printer devterm-socat \
+		devterm-fan-daemon \
+		$PKG/etc/rc.d/
+	install -D -m 755 audio_3.5_patch.py devterm_socat_perms \
+		$PKG/usr/bin/
+	echo 'TTF=/usr/share/fonts/TTF/DejaVuSansMono.ttf' > $PKG/etc/devterm-printer
+
+	# That's it.  We win.
+}
