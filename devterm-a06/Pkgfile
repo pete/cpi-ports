@@ -50,20 +50,20 @@ build() {
 	install -D -m 0755 libwiringPi.so.2.50 $PKG/usr/lib/libwiringPi.so.2.50
 	ln -sf libwiringPi.so.2.50 $PKG/usr/lib/libwiringPi.so
 
-	cd $here/Code/devLib
+	cd $here/Code/devterm_wiringpi_cpi/devLib
 	make BOARD=clockworkpi-a06-rk3399 CFLAGS="$CFLAGS -DPIC -fPIC -I$PKG/usr/include" LDFLAGS="$LDFLAGS -L$PKG/usr/lib -L."
 	install -D -m 0644 ds1302.h gertboard.h  lcd128x64.h  lcd.h  maxdetect.h piFace.h  piGlow.h  piNes.h scrollPhat.h $PKG/usr/include/
 	install -D -m 0755 libwiringPiDev.so.2.50 $PKG/usr/lib/
 	ln -sf libwiringPiDev.so.2.50 $PKG/usr/lib/libwiringPiDev.so
 
-	cd $here/Code/gpio
+	cd $here/Code/devterm_wiringpi_cpi/gpio
 	make BOARD=clockworkpi-a06-rk3399 CFLAGS="$CFLAGS -DPIC -fPIC -I$PKG/usr/include" LDFLAGS="$LDFLAGS -L$PKG/usr/lib -L."
 	# Finally, one that works, although it doesn't treat $PREFIX as expected
 	# ...It uses "root.root" instead of "root:root".
 	sed -i 's/root\.root/root:root/' Makefile
 	make PREFIX="" DESTDIR=$PKG/usr install
 
-	cd $here/Code/wiringPiD
+	cd $here/Code/devterm_wiringpi_cpi/wiringPiD
 	make BOARD=clockworkpi-a06-rk3399 CFLAGS="$CFLAGS -DPIC -fPIC -I$PKG/usr/include" LDFLAGS="$LDFLAGS -L$PKG/usr/lib -L."
 	make PREFIX=/usr DESTDIR=$PKG install
 
