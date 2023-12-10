@@ -50,34 +50,33 @@ build() {
 	install -D -m 0755 libwiringPi.so.2.50 $PKG/usr/lib/libwiringPi.so.2.50
 	ln -sf libwiringPi.so.2.50 $PKG/usr/lib/libwiringPi.so
 
-	cd ../devLib
+	cd $here/Code/devLib
 	make BOARD=clockworkpi-a06-rk3399 CFLAGS="$CFLAGS -DPIC -fPIC -I$PKG/usr/include" LDFLAGS="$LDFLAGS -L$PKG/usr/lib -L."
 	install -D -m 0644 ds1302.h gertboard.h  lcd128x64.h  lcd.h  maxdetect.h piFace.h  piGlow.h  piNes.h scrollPhat.h $PKG/usr/include/
 	install -D -m 0755 libwiringPiDev.so.2.50 $PKG/usr/lib/
 	ln -sf libwiringPiDev.so.2.50 $PKG/usr/lib/libwiringPiDev.so
 
-	cd ../gpio
+	cd $here/Code/gpio
 	make BOARD=clockworkpi-a06-rk3399 CFLAGS="$CFLAGS -DPIC -fPIC -I$PKG/usr/include" LDFLAGS="$LDFLAGS -L$PKG/usr/lib -L."
 	# Finally, one that works, although it doesn't treat $PREFIX as expected
 	# ...It uses "root.root" instead of "root:root".
 	sed -i 's/root\.root/root:root/' Makefile
 	make PREFIX="" DESTDIR=$PKG/usr install
 
-	cd ../wiringPiD
+	cd $here/Code/wiringPiD
 	make BOARD=clockworkpi-a06-rk3399 CFLAGS="$CFLAGS -DPIC -fPIC -I$PKG/usr/include" LDFLAGS="$LDFLAGS -L$PKG/usr/lib -L."
 	make PREFIX=/usr DESTDIR=$PKG install
 
 	# cups support for thermal printer.  Makefile doesn't support DESTDIR. :P
-	cd $here/devterm_thermal_printer_cups
+	cd $here/Code/devterm_thermal_printer_cups
 	make
 	install -D -m 755 rastertocpi $PKG/usr/lib/cups/filter/rastertocpi
 	install -D -m 644 cpi58.ppd $PKG/usr/share/cups/model/clockworkpi/cpi58.ppd
 
-	cd $here/thermal_printer
+	cd $here/Code/thermal_printer
 	make CFLAGS="$CFLAGS -I$PKG/usr/include -L$PKG/usr/lib" # sic
 	install -D -m 755 devterm_thermal_printer.elf $PKG/usr/bin/devterm_thermal_printer.elf
 
-	# The Python/bash stuff is 
 	cd $here
 	# Keyboard firmware installers
 	install -D -m 755 \
