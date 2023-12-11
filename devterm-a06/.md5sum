@@ -1,6 +1,6 @@
 1f9fb33e6249e94258f91de9ff76aec0  audio_3.5_patch.py
-ea7837d053ae33aed9bda79b0441d27f  devterm-audio-patch
-bc01dc76e267538a19a5506ce91780a3  devterm-fan-daemon
+25a5b4a0ac381c12fd3c00c9809e3100  devterm-audio-patch
+a6b5be4cab3f3c3df171a71bb3b6cd70  devterm-fan-daemon
 f4fb13c1dfd17960e7a86f60d23761aa  devterm-printer
-7abb72e5ace7bfddcf3af3de235027b5  devterm-socat
+bef732fa907930dc0bb857c9a58cc2c6  devterm-socat
 8ec68cfdacec6d4e800915f239b96cc1  devterm_socat_perms
