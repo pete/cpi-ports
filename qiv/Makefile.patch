@@ -1,0 +1,39 @@
+--- Makefile.orig	2010-08-30 22:58:36.000000000 +0200
++++ Makefile	2010-08-30 23:02:12.000000000 +0200
+@@ -3,8 +3,10 @@
+ # User Options
+ #######################################################################
+ 
++DESTDIR =
++
+ # Directory where qiv will be installed under.
+-PREFIX = /usr/local
++PREFIX = /usr
+ 
+ # Font to use for statusbar in fullscreen mode
+ STATUSBAR_FONT = "fixed"
+@@ -83,7 +85,7 @@
+ endif
+ 
+ ifdef GTD_XINERAMA
+-LIBS     += -L/usr/X11R6/lib -lXinerama
++LIBS     += -L/usr/lib/X11 -lXinerama
+ endif
+ 
+ ifdef MAGIC
+@@ -127,13 +129,7 @@
+ 
+ install: $(PROGRAM)
+ 	@echo "Installing QIV..."
+-	install -s -m 0755 $(PROGRAM) $(PREFIX)/bin
+-	install -m 0644 $(PROGRAM).1 $(PREFIX)/man/man1
+-	$(COMPRESS_PROG) $(PREFIX)/man/man1/$(PROGRAM).1
+-	@if ./qiv -f ./intro.jpg ; \
+-	then echo "-- Test Passed --" ; \
+-	else echo "-- Test Failed --" ; \
+-	fi
+-	@echo -ne "\nDont forget to look into the \"qiv-command\" file and install it!\n-> cp qiv-command.example /usr/local/bin/qiv-command\n\n"
++	install -D -m 0755 $(PROGRAM) $(DESTDIR)/$(PREFIX)/bin/$(PROGRAM)
++	install -D -m 0644 $(PROGRAM).1 $(DESTDIR)/$(PREFIX)/man/man1/$(PROGRAM).1
+ 
+ # the end... ;-)

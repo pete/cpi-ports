@@ -1,0 +1,16 @@
+# Description: Very small and pretty fast gdk/Imlib2 image viewer
+# URL: https://spiegl.de/qiv/
+# Depends on: imlib2
+
+name=qiv
+version=2.2.3
+release=1
+source=(http://spiegl.de/qiv/download/$name-$version.tgz \
+        Makefile.patch)
+
+build () {
+  cd $name-$version
+  patch -p0 -i $SRC/Makefile.patch
+  make
+  make DESTDIR=$PKG install
+}
