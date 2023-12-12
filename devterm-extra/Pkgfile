@@ -1,0 +1,14 @@
+# Description: Some extras for the DevTerm (and probably uConsole)
+# Maintainer: Pete Elmore, pete at debu dot gs
+# Depends on: 
+
+name=devterm-extra
+version=1.0
+release=1
+
+source=(zramswap)
+
+build() {
+	install -D -d -m 755 $PKG/etc/rc.d
+	install -D -m 755 zramswap $PKG/etc/rc.d
+}

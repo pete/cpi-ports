@@ -1,0 +1,27 @@
+#!/bin/sh
+# Initializes zram swap
+# Defaults to 2GB, as the A06 and the CM4 default configurations both have 4GB.
+
+ZRAM=zram0
+
+case $1 in
+start)
+	echo zstd > /sys/block/$ZRAM/comp_algorithm
+	echo 2G >  /sys/block/$ZRAM/disksize
+	/sbin/mkswap /dev/$ZRAM
+	/sbin/swapon /dev/$ZRAM
+	;;
+stop)
+	/sbin/swapoff /dev/$ZRAM
+	echo 1 > /sys/block/$ZRAM/reset
+	;;
+restart)
+	$0 stop
+	$0 start
+	;;
+*)
+	echo "usage: $0 [start|stop|restart]"
+	;;
+esac
+
+# End of file
