@@ -5,7 +5,7 @@
 
 name=barrier
 version=2023.12.11
-release=2
+release=4
 git_commit=
 source=( )
 
@@ -14,9 +14,9 @@ build() {
 	# dependencies, but as things are, unless you clone the repo, it won't
 	# be able to get the submodules.
 	test -d $PKGMK_SOURCE_DIR/barrier || git clone https://github.com/debauchee/barrier $PKGMK_SOURCE_DIR/barrier
-	git clone --depth 1 --shallow-submodules $PKGMK_SOURCE_DIR/barrier ./barrier
+	git clone --shallow-submodules $PKGMK_SOURCE_DIR/barrier ./barrier
 	cd barrier
-	sh clean_build.sh
+	B_BUILD_TYPE=Release sh clean_build.sh
 
 	# No permutation got it to recognize $PREFIX.
 	install -D -d -m 755 $PKG/usr/bin
