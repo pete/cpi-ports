@@ -31,8 +31,8 @@ source=( audio_3.5_patch.py devterm-fan-daemon devterm-audio-patch devterm-print
 #     urge to rewrite in C or Go or something that isn't interpreted.  I have
 #     never seen them require much CPU, though, so this is very low-priority.
 build() {
-	test -d $PKGMK_SRC_DIR/DevTerm || git clone https://github.com/clockworkpi/DevTerm $PKGMK_SRC_DIR/DevTerm
-	sh -c "cd $PKGMK_SRC_DIR/DevTerm && git archive --format tar --prefix DevTerm/ HEAD" | tar xv
+	test -d $PKGMK_SOURCE_DIR/DevTerm || git clone https://github.com/clockworkpi/DevTerm $PKGMK_SOURCE_DIR/DevTerm
+	sh -c "cd $PKGMK_SOURCE_DIR/DevTerm && git archive --format tar --prefix DevTerm/ HEAD" | tar xv
 
 	cd DevTerm
 	here=`pwd`

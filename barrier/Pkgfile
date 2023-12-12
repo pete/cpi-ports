@@ -13,8 +13,8 @@ build() {
 	# It'd be nice if they produced a tarball that included the
 	# dependencies, but as things are, unless you clone the repo, it won't
 	# be able to get the submodules.
-	test -d $PKGMK_SRC_DIR/barrier || git clone https://github.com/debauchee/barrier
-	git clone --depth 1 --shallow-submodules $PKGMK_SRC_DIR/barrier ./barrier
+	test -d $PKGMK_SOURCE_DIR/barrier || git clone https://github.com/debauchee/barrier $PKGMK_SOURCE_DIR/barrier
+	git clone --depth 1 --shallow-submodules $PKGMK_SOURCE_DIR/barrier ./barrier
 	cd barrier
 	PREFIX=/usr sh clean_build.sh
 	cd build
