@@ -10,14 +10,7 @@ source=(https://github.com/g0hl1n/xprintidle/archive/refs/tags/$version.tar.gz)
 
 build() {
 	cd $name-$version
-	meson setup $name-$version build \
-		--prefix=/usr \
-		--buildtype plain \
-		-D b_lto=true \
-		-D b_pie=true
-
+	meson build --prefix=/usr --buildtype release
 	meson compile -C build
 	DESTDIR=$PKG meson install -C build
-	find $PKG -name README -delete
-	rm -rf $PKG/usr/share/locale
 }
