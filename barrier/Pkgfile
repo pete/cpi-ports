@@ -16,7 +16,8 @@ build() {
 	test -d $PKGMK_SOURCE_DIR/barrier || git clone https://github.com/debauchee/barrier $PKGMK_SOURCE_DIR/barrier
 	git clone --depth 1 --shallow-submodules $PKGMK_SOURCE_DIR/barrier ./barrier
 	cd barrier
-	PREFIX=/usr sh clean_build.sh
+	echo 'export PREFIX=/usr' > build_env.sh
+	sh clean_build.sh
 	cd build
 	make PREFIX=/usr DESTDIR=$PKG install
 }
