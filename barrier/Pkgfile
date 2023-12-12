@@ -1,0 +1,22 @@
+# Description:  Keyboard/mouse sharing across screens
+# URL:  https://github.com/debauches/barrier
+# Maintainer:  Pete, pete at debu dot gs
+# Depends on: cmake libnghttp2
+
+name=barrier
+version=2023.12.11
+release=1
+git_commit=
+source=( )
+
+build() {
+	# It'd be nice if they produced a tarball that included the
+	# dependencies, but as things are, unless you clone the repo, it won't
+	# be able to get the submodules.
+	test -d $PKGMK_SRC_DIR/barrier || git clone https://github.com/debauchee/barrier
+	git clone --depth 1 --shallow-submodules $PKGMK_SRC_DIR/barrier ./barrier
+	cd barrier
+	PREFIX=/usr sh clean_build.sh
+	cd build
+	make PREFIX=/usr DESTDIR=$PKG install
+}
