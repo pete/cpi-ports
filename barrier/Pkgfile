@@ -5,7 +5,7 @@
 
 name=barrier
 version=2023.12.11
-release=1
+release=2
 git_commit=
 source=( )
 
@@ -16,8 +16,18 @@ build() {
 	test -d $PKGMK_SOURCE_DIR/barrier || git clone https://github.com/debauchee/barrier $PKGMK_SOURCE_DIR/barrier
 	git clone --depth 1 --shallow-submodules $PKGMK_SOURCE_DIR/barrier ./barrier
 	cd barrier
-	echo 'export PREFIX=/usr' > build_env.sh
 	sh clean_build.sh
-	cd build
-	make PREFIX=/usr DESTDIR=$PKG install
+
+	# No permutation got it to recognize $PREFIX.
+	install -D -d -m 755 $PKG/usr/bin
+	install -D -d -m 755 $PKG/usr/share/man/man1
+
+	install -D -m 755 build/bin/barriers $PKG/usr/bin/
+	install -D -m 755 build/bin/barrierc $PKG/usr/bin/
+	# Don't treat it as fatal if the GUI version isn't present:
+	if test -f build/bin/barrier ; then
+		install -D -m 755 build/bin/barrier $PKG/usr/bin/
+	fi
+	gzip < doc/barrierc.1 > $PKG/usr/share/man/man1/barrierc.1.gz
+	gzip < doc/barriers.1 > $PKG/usr/share/man/man1/barriers.1.gz
 }
