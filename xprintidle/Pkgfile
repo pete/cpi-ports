@@ -1,0 +1,23 @@
+# Description: Prints the amount of time the X session has been idle.
+# URL: https://github.com/g0hl1n/xprintidle
+# Maintainer: Pete, pete at debu dot gs
+# Depends on:
+
+name=xprintidle
+version=0.2.5
+release=1
+source=(https://github.com/g0hl1n/xprintidle/archive/refs/tags/$version.tar.gz)
+
+build() {
+	cd $name-$version
+	meson setup $name-$version build \
+		--prefix=/usr \
+		--buildtype plain \
+		-D b_lto=true \
+		-D b_pie=true
+
+	meson compile -C build
+	DESTDIR=$PKG meson install -C build
+	find $PKG -name README -delete
+	rm -rf $PKG/usr/share/locale
+}
