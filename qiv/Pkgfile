@@ -3,7 +3,7 @@
 # Depends on: imlib2
 
 name=qiv
-version=2.2.3
+version=2.3.3
 release=1
 source=(http://spiegl.de/qiv/download/$name-$version.tgz \
         Makefile.patch)
