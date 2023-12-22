@@ -4,7 +4,7 @@
 #ExecStart=socat -d -d pty,link=/tmp/DEVTERM_PRINTER_OUT,raw,echo=0 pty,link=/tmp/DEVTERM_PRINTER_IN,raw,echo=0 
 #ExecStartPost=/usr/local/bin/devterm_socat.sh
 
-D="/usr/bin/start-stop-daemon --pidfile /var/run/devterm-printer-socat.pid"
+D="/sbin/start-stop-daemon --pidfile /var/run/devterm-printer-socat.pid"
 
 case $1 in
 	start)
