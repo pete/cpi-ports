@@ -4,7 +4,7 @@
 # Depends on: python3 socat start-stop-daemon
 
 name=devterm-a06
-version=2023.12.08
+version=2023.12.21
 release=1
 git_commit=
 source=( audio_3.5_patch.py devterm-fan-daemon devterm-audio-patch devterm-printer devterm-socat devterm_socat_perms )
