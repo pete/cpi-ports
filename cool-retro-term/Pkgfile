@@ -1,0 +1,32 @@
+# Description: [C]ool [R]etro [T]erminal simulates an old CRT.
+# URL: https://github.com/Swordfish90/cool-retro-term/
+# Maintainer: Pete, pete at debu dot gs
+# Depends on: qtermwidget
+
+name=cool-retro-term
+version=1.2.0
+release=1
+
+#source=(https://github.com/Swordfish90/cool-retro-term/archive/refs/tags/$version.tar.gz)
+# I would like not to do this as a git repo but submodules are not included in
+# the tarball that upstream links to in their release notes, that tarball just
+# being a `git-archive` and not a properly packaged source tarball.  At least
+# this stops us having to deal with another "$version.tar.gz" file in /usr/src.
+source=( )
+
+build() {
+	test -d $PKGMK_SOURCE_DIR/cool-retro-term || git clone --shallow-submodules https://github.com/Swordfish90/cool-retro-term $PKGMK_SOURCE_DIR/cool-retro-term
+	git clone --recurse-submodules --shallow-submodules $PKGMK_SOURCE_DIR/cool-retro-term ./cool-retro-term
+	cd cool-retro-term
+	git checkout $version
+
+	qmake CONFIG+=release PREFIX=/usr
+	make
+	make -j1 INSTALL_ROOT=$PKG install
+	install -D -d -m 755 $PKG/usr/share/man/man1
+	gzip < packaging/debian/cool-retro-term.1 > $PKG/usr/share/man/man1/cool-retro-term.1.gz
+	install -D -d -m 755 $PKG/usr/share/fonts/X11/TTF
+	cp ./app/qml/fonts/*/*.ttf $PKG/usr/share/fonts/X11/TTF
+	install -D -d -m 755 $PKG/usr/share/fonts/X11/OTF
+	cp ./app/qml/fonts/*/*.otf $PKG/usr/share/fonts/X11/OTF
+}
