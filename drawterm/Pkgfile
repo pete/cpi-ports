@@ -1,0 +1,23 @@
+# Description: drawterm (9front version) is for connecting to Plan 9 machines.
+# URL: 
+# Maintainer: Pete, pete at debu dot gs
+# Depends on: xorg-libxdmcp xorg-libxau xorg-libxcb
+
+name=drawterm
+version=2023.12.24
+gitrev=f9ae0c837bf8351037689f1985c1a52c1570ba30
+release=1
+
+source=( )
+
+build() {
+	test -d $PKGMK_SOURCE_DIR/drawterm || git clone git://git.9front.org/plan9front/drawterm $PKGMK_SOURCE_DIR/drawterm
+	git clone $PKGMK_SOURCE_DIR/drawterm ./drawterm
+	cd drawterm
+	git checkout $gitrev
+
+	make CONF=unix drawterm
+	install -D -m 755 drawterm $PKG/usr/bin/drawterm
+	install -D -d -m 755 $PKG/usr/share/man/man1
+	gzip < drawterm.1 > $PKG/usr/share/man/man1/drawterm.1.gz
+}
