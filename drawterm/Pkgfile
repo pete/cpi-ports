@@ -1,5 +1,5 @@
 # Description: drawterm (9front version) is for connecting to Plan 9 machines.
-# URL: 
+# URL: http://git.9front.org/plan9front/drawterm/HEAD/info.html
 # Maintainer: Pete, pete at debu dot gs
 # Depends on: xorg-libxdmcp xorg-libxau xorg-libxcb
 
