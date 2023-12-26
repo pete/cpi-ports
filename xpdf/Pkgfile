@@ -7,16 +7,10 @@
 name=xpdf
 version=3.04
 release=1
-source=(https://dl.xpdfreader.com/old/xpdf-$version.tar.gz
-	$name-${version}pl1.patch
-	$name-${version}pl2.patch
-	$name-${version}pl3.patch)
+source=(https://dl.xpdfreader.com/old/xpdf-$version.tar.gz)
 
 build() {
     cd $name-$version
-    patch -p1 -i $SRC/$name-${version}pl1.patch
-    patch -p1 -i $SRC/$name-${version}pl2.patch
-    patch -p1 -i $SRC/$name-${version}pl3.patch
     ./configure \
 	--prefix=/usr \
         --with-Xm-library=/usr/lib \
