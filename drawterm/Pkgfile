@@ -4,8 +4,8 @@
 # Depends on: xorg-libxdmcp xorg-libxau xorg-libxcb
 
 name=drawterm
-version=2023.12.24
-gitrev=f9ae0c837bf8351037689f1985c1a52c1570ba30
+version=2024.09.09
+gitrev=789b8fe40e156ad0252230b13dd4ada96f3eed8b
 release=1
 
 source=( )
